@@ -49,7 +49,7 @@ const projectsData = [
     title: "Hindi Tokenizer",
     description:
       "A tokenizer for the Hindi language, trained from scratch with Byte-Pair Encoding algorithm.",
-    link: "/projects/hindi-tokenizer",
+    link: "/projects",
     code: "https://github.com/yatharth1706/Hindi-Tokenizer",
     previewImage: "/images/hindi-bpe.png",
     technologies: [
