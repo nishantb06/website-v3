@@ -1,16 +1,15 @@
-import BlogCard from "@/components/blog-card";
-import { fetchBlogs } from "@/lib/notion";
+import { Bento } from "@/components/bento";
 
-export default async function Home() {
-  const blogs = await fetchBlogs();
+export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1 className="text-2xl font-bold">Nishant&apos;s Blog</h1>
-        {blogs.map((blog) => (
-          <BlogCard key={blog.id} {...blog} />
-        ))}
-      </main>
-    </div>
+    <>
+      <div className="w-full flex items-center justify-center max-w-5xl mx-auto">
+        <div className="flex flex-col items-center overflow-hidden">
+          <div className="w-full py-2  px-2 lg:py-10 lg:px-4">
+            <Bento />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
