@@ -18,6 +18,7 @@ import { Marquee } from "./magicui/marquee";
 import { defaultDomains } from "./data/default-domains";
 import { cn } from "@/lib/utils";
 import { RippleCard } from "./ui/ripper-card";
+import { AnimatedBeamMultipleOutputs } from "./animated-beam-multiple-outputs";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -237,6 +238,24 @@ const features = [
           <GithubCal />
         </div>
       </FadeIn>
+    ),
+  },
+  {
+    Icon: "",
+    name: "AI Integrations",
+    description:
+      "Generative UIs, LLMs, Transformers, Chatbots, Classification, and more.",
+    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/tags/ai`,
+    cta: "Visit AI projects",
+    className: "col-span-3 md:col-span-2",
+    background: (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+      >
+        <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
+      </motion.div>
     ),
   },
   {
