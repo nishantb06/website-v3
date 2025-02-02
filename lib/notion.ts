@@ -32,7 +32,7 @@ export const fetchBlogs = cache(async () => {
       subtitle: blog.properties.Subtitle.rich_text[0].plain_text,
       date: blog.properties.Date.date.start,
       slug: blog.properties.slug.rich_text[0].plain_text,
-      tags: blog.properties.Tags.multi_select,
+      tags: blog.properties.Tags.multi_select.map((tag) => tag.name),
       status: blog.properties.Status.status.name,
     })
   );

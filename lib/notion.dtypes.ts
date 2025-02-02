@@ -125,9 +125,11 @@ export const CleanBlogSchema = z.object({
   slug: z.string(),
   subtitle: z.string(),
   date: z.string(),
-  tags: z.array(TagSchema),
+  tags: z.array(z.string()),
   status: z.string(),
 });
 
 export type CleanBlog = z.infer<typeof CleanBlogSchema>;
 
+export const CleanBlogsSchema = z.array(CleanBlogSchema);
+export type CleanBlogs = z.infer<typeof CleanBlogsSchema>;
