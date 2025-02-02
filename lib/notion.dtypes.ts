@@ -30,7 +30,7 @@ const DateSchema = z.object({
   time_zone: z.null(),
 });
 
-const TagSchema = z.object({
+export const TagSchema = z.object({
   id: z.string(),
   name: z.string(),
   color: z.string(),
@@ -118,3 +118,16 @@ export const NotionBlogsSchema = z.array(NotionBlogSchema);
 // Export types
 export type NotionBlog = z.infer<typeof NotionBlogSchema>;
 export type NotionBlogs = z.infer<typeof NotionBlogsSchema>;
+
+export const CleanBlogSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  subtitle: z.string(),
+  date: z.string(),
+  tags: z.array(TagSchema),
+  status: z.string(),
+});
+
+export type CleanBlog = z.infer<typeof CleanBlogSchema>;
+
