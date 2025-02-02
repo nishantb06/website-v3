@@ -1,4 +1,3 @@
-import { fetchBlogs } from "@/lib/notion";
 import { NotionBlog } from "@/lib/notion.dtypes";
 
 export default function BlogCard({ blog }: { blog: NotionBlog }) {
