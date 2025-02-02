@@ -19,11 +19,11 @@ import { defaultDomains } from "./data/default-domains";
 import { cn } from "@/lib/utils";
 import { RippleCard } from "./ui/ripper-card";
 import { AnimatedBeamMultipleOutputs } from "./animated-beam-multiple-outputs";
-
+import ProjectPosts from "./project-posts";
 const BLUR_FADE_DELAY = 0.04;
 
 const features = [
-    {
+  {
     Icon: "",
     name: "",
     description: "",
@@ -50,8 +50,7 @@ const features = [
   {
     Icon: "",
     name: "I'm Nishant",
-    description:
-      "ML Engineer focused on building LLM, Computer Vision systems",
+    description: "ML Engineer focused on building LLM, Computer Vision systems",
     className: "col-span-3 md:col-span-1",
     href: `/projects`,
     cta: "Visit portfolio",
@@ -103,6 +102,28 @@ const features = [
             </div>
           </a>
         </FadeIn>
+      </div>
+    ),
+  },
+  {
+    Icon: "",
+    name: "Project Showcase",
+    description:
+      "Here are a few of my recent projects, using the technologies mentioned above.",
+    className: "col-span-3 md:col-span-2",
+    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/projects`,
+    cta: "All projects",
+    background: (
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
+        <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
+          <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
+            <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
+              <div className="flex items-center gap-2">
+                <ProjectPosts />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     ),
   },
@@ -164,7 +185,7 @@ const features = [
       </motion.div>
     ),
   },
-{
+  {
     Icon: "",
     name: "",
     description: "",
@@ -278,15 +299,13 @@ const features = [
               </BlurIn>
             </div>
             <div className="w-full flex justify-center text-neutral-500 dark:text-neutral-400">
-              Shoot a dm on X or send an email to get the conversation started. I&apos;ll be in
-              touch soon.
+              Shoot a dm on X or send an email to get the conversation started.
+              I&apos;ll be in touch soon.
             </div>
             {/* <div className="text-sm text-neutral-500 dark:text-neutral-400 mt-2">
               *Your email will never be shared with anyone.
             </div> */}
-            <div className="">
-              {/* <EmailForm /> */}
-            </div>
+            <div className="">{/* <EmailForm /> */}</div>
           </div>
         </div>
 

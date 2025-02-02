@@ -34,6 +34,7 @@ export const fetchBlogs = cache(async () => {
       slug: blog.properties.slug.rich_text[0].plain_text,
       tags: blog.properties.Tags.multi_select.map((tag) => tag.name),
       status: blog.properties.Status.status.name,
+      cover: blog.cover?.type === "external" ? blog.cover.external.url : blog.cover?.type === "file" ? blog.cover.file.url : "/images/default-blog.jpg",
     })
   );
   return blogs;
