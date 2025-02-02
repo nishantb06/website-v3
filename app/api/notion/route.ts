@@ -5,8 +5,5 @@ export async function GET() {
   const notionApiKey = env.NOTION_API_KEY;
   const notionDatabaseId = env.NOTION_DATABASE_ID;
 
-  console.log(notionApiKey);
-  console.log(notionDatabaseId);
-
   // Use the variables...
 } 
