@@ -79,10 +79,10 @@ const config = {
             opacity: "0",
           },
         },
-        grid: {
-          "0%": { transform: "translateY(-50%)" },
-          "100%": { transform: "translateY(0)" },
-        },
+        // grid: {
+        //   "0%": { transform: "translateY(-50%)" },
+        //   "100%": { transform: "translateY(0)" },
+        // },
         marquee: {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(calc(-100% - var(--gap)))" },
