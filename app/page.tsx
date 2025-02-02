@@ -1,4 +1,3 @@
-import Footer from "./footer";
 import BlogCard from "@/components/blog-card";
 import { fetchBlogs } from "@/lib/notion";
 
@@ -12,7 +11,6 @@ export default async function Home() {
           <BlogCard key={blog.id} {...blog} />
         ))}
       </main>
-      <Footer />
     </div>
   );
 }

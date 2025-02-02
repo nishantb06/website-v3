@@ -1,7 +1,7 @@
 import { fetchBlogs } from "@/lib/notion";
 import { CleanBlog } from "@/lib/notion.dtypes";
 import Link from "next/link";
-import BlogCard  from "@/components/blog-card";
+import BlogCard from "@/components/blog-card";
 
 function BlogList({ blogs }: { blogs: CleanBlog[] }) {
   return (
@@ -12,18 +12,23 @@ function BlogList({ blogs }: { blogs: CleanBlog[] }) {
             <BlogCard {...blog} />
           </Link>
         </div>
-        ))}
+      ))}
     </div>
   );
 }
 
-export default async function TagPage({ params }: { params: { slug: string } }) {
+export default async function TagPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const blogs = await fetchBlogs();
-  const blogsWithTag = blogs.filter((blog) => blog.tags.includes(params.slug));
+  const blogsWithTag = blogs.filter((blog) => blog.tags.includes(slug));
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1 className="text-2xl font-bold">Blogs with tag: {params.slug}</h1>
+        <h1 className="text-2xl font-bold">Blogs with tag: {slug}</h1>
         <BlogList blogs={blogsWithTag} />
       </main>
     </div>
