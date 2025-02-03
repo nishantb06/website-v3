@@ -127,6 +127,7 @@ export const CleanBlogSchema = z.object({
   date: z.string(),
   tags: z.array(z.string()),
   status: z.string(),
+  cover: z.string(),
 });
 
 export type CleanBlog = z.infer<typeof CleanBlogSchema>;
