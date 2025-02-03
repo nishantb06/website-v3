@@ -184,17 +184,14 @@ const features = [
   },
   {
     Icon: "",
-    name: "",
+    name: "Work Experience",
     description: "",
     href: "",
-    cta: "",
+    cta: "Read more",
     className: "md:row-span-1 md:col-span-2",
     background: (
       <section id="work" className="flex flex-col p-5">
         <div className="flex min-h-0 flex-col gap-y-3">
-          <BlurFade delay={BLUR_FADE_DELAY * 7}>
-            <h2 className="text-xl font-bold">Work Experience</h2>
-          </BlurFade>
           {DATA.work.map((work, id) => (
             <BlurFade
               key={work.company}
