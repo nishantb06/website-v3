@@ -1,22 +1,6 @@
 import { fetchBlogs } from "@/lib/notion";
-import { CleanBlog } from "@/lib/notion.dtypes";
-import Link from "next/link";
 import {BlogCard} from "@/components/blog-card";
 import BlurIn from "@/components/magicui/blurin";
-
-function BlogList({ blogs }: { blogs: CleanBlog[] }) {
-  return (
-    <div className="flex flex-col gap-8">
-      {blogs.map((blog) => (
-        <div key={blog.id}>
-          <Link href={`/blog/${blog.slug}`}>
-            <BlogCard {...blog} />
-          </Link>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default async function TagPage({
   params,
