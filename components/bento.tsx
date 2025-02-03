@@ -19,7 +19,7 @@ import { defaultDomains } from "./data/default-domains";
 import { cn } from "@/lib/utils";
 import { RippleCard } from "./ui/ripper-card";
 import { AnimatedBeamMultipleOutputs } from "./animated-beam-multiple-outputs";
-import ProjectPosts from "./project-posts";
+// import ProjectPosts from "./project-posts";
 const BLUR_FADE_DELAY = 0.04;
 
 const features = [
@@ -105,28 +105,28 @@ const features = [
       </div>
     ),
   },
-  {
-    Icon: "",
-    name: "Project Showcase",
-    description:
-      "Here are a few of my recent projects, using the technologies mentioned above.",
-    className: "col-span-3 md:col-span-2",
-    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/projects`,
-    cta: "All projects",
-    background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
-        <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
-          <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
-            <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
-              <div className="flex items-center gap-2">
-                <ProjectPosts />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
+  // {
+  //   Icon: "",
+  //   name: "Project Showcase",
+  //   description:
+  //     "Here are a few of my recent projects, using the technologies mentioned above.",
+  //   className: "col-span-3 md:col-span-2",
+  //   href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/projects`,
+  //   cta: "All projects",
+  //   background: (
+  //     <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
+  //       <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
+  //         <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
+  //           <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
+  //             <div className="flex items-center gap-2">
+  //               <ProjectPosts />
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   ),
+  // },
   // {
   //   Icon: "",
   //   name: "Technologies",
@@ -149,7 +149,7 @@ const features = [
     description: "Sector-agnostic, focused on solving problems with code.",
     href: `/projects`,
     cta: "View projects",
-    className: "md:col-span-2 md:row-span-1",
+    className: "md:col-span-1 md:row-span-1",
     background: (
       <motion.div
         initial={{ opacity: 0 }}
@@ -182,6 +182,24 @@ const features = [
             </a>
           ))}
         </Marquee>
+      </motion.div>
+    ),
+  },
+  {
+    Icon: "",
+    name: "AI Integrations",
+    description:
+      "Generative UIs, LLMs, Transformers, Chatbots, Classification, and more.",
+    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/tags/ai`,
+    cta: "Visit AI projects",
+    className: "col-span-3 md:col-span-2",
+    background: (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+      >
+        <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
       </motion.div>
     ),
   },
@@ -259,24 +277,6 @@ const features = [
           <GithubCal />
         </div>
       </FadeIn>
-    ),
-  },
-  {
-    Icon: "",
-    name: "AI Integrations",
-    description:
-      "Generative UIs, LLMs, Transformers, Chatbots, Classification, and more.",
-    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/tags/ai`,
-    cta: "Visit AI projects",
-    className: "col-span-3 md:col-span-2",
-    background: (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
-      >
-        <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
-      </motion.div>
     ),
   },
   {
