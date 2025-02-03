@@ -2,7 +2,7 @@
 
 
 import ProjectShowcaseVertical from "./project-showcase-verticle";
-import { fetchBlogs } from "@/lib/notion";
+// import { fetchBlogs } from "@/lib/notion";
 // import { defaultDomains } from "./data/default-domains";
 
 // Default projects data to use when Notion is not configured

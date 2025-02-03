@@ -17,9 +17,9 @@ import { motion } from "framer-motion";
 import { Marquee } from "./magicui/marquee";
 import { defaultDomains } from "./data/default-domains";
 import { cn } from "@/lib/utils";
-import { RippleCard } from "./ui/ripper-card";
+// import { RippleCard } from "./ui/ripper-card";
 import { AnimatedBeamMultipleOutputs } from "./animated-beam-multiple-outputs";
-import { MarqueeDemo } from "./marquee-demo";
+import { BlogsMarqueeVertical } from "./blogs-marquee-vertical";
 // import ProjectPosts from "./project-posts";
 const BLUR_FADE_DELAY = 0.04;
 
@@ -257,7 +257,7 @@ const features = [
           <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
             <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
               <div className="flex items-center gap-2">
-                <MarqueeDemo />
+                <BlogsMarqueeVertical />
               </div>
             </div>
           </div>

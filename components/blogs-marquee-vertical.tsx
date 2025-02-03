@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
 
-const reviews = [
+const blogs = [
   {
     title: "How to write backfills scripts at work",
     slug: "backfill-scripts",
@@ -79,12 +79,12 @@ const ReviewCard = ({
   );
 };
 
-export function MarqueeDemo() {
+export function BlogsMarqueeVertical() {
   return (
     <div className="relative flex  w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background md:shadow-xl">
       <Marquee pauseOnHover vertical className="[--duration:20s] ">
-        {reviews.map((review) => (
-          <ReviewCard key={review.slug} {...review} />
+        {blogs.map((blog) => (
+          <ReviewCard key={blog.slug} {...blog} />
         ))}
       </Marquee>
       {/* <Marquee reverse pauseOnHover vertical className="[--duration:20s]">
