@@ -245,12 +245,12 @@ const features = [
   // },
   {
     Icon: "",
-    name: "Project Showcase",
+    name: "Writings",
     description:
-      "Here are a few of my recent projects, using the technologies mentioned above.",
+      "Writings on ML, Engineering, and more.",
     className: "md:row-span-2 md:col-span-1",
-    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/projects`,
-    cta: "All projects",
+    href: `/blog`,
+    cta: "View all Blogs",
     background: (
       <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
         <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
