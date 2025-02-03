@@ -19,6 +19,7 @@ import { defaultDomains } from "./data/default-domains";
 import { cn } from "@/lib/utils";
 import { RippleCard } from "./ui/ripper-card";
 import { AnimatedBeamMultipleOutputs } from "./animated-beam-multiple-outputs";
+import { MarqueeDemo } from "./marquee-demo";
 // import ProjectPosts from "./project-posts";
 const BLUR_FADE_DELAY = 0.04;
 
@@ -105,28 +106,6 @@ const features = [
       </div>
     ),
   },
-  // {
-  //   Icon: "",
-  //   name: "Project Showcase",
-  //   description:
-  //     "Here are a few of my recent projects, using the technologies mentioned above.",
-  //   className: "col-span-3 md:col-span-2",
-  //   href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/projects`,
-  //   cta: "All projects",
-  //   background: (
-  //     <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
-  //       <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
-  //         <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
-  //           <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
-  //             <div className="flex items-center gap-2">
-  //               <ProjectPosts />
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   ),
-  // },
   // {
   //   Icon: "",
   //   name: "Technologies",
@@ -247,18 +226,40 @@ const features = [
   //   className: "col-span-1 md:col-span-1",
   //   background: <MarqueeDemo />,
   // },
+  // {
+  //   Icon: "",
+  //   name: "",
+  //   description: "",
+  //   href: "",
+  //   cta: "",
+  //   className: "col-span-3 md:col-span-1",
+  //   background: (
+  //     <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[105%]">
+  //       <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
+  //         <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
+  //           <RippleCard />
+  //         </div>
+  //       </div>
+  //     </div>
+  //   ),
+  // },
   {
     Icon: "",
-    name: "",
-    description: "",
-    href: "",
-    cta: "",
-    className: "col-span-3 md:col-span-1",
+    name: "Project Showcase",
+    description:
+      "Here are a few of my recent projects, using the technologies mentioned above.",
+    className: "md:row-span-2 md:col-span-1",
+    href: `${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/projects`,
+    cta: "All projects",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[105%]">
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
         <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
           <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
-            <RippleCard />
+            <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
+              <div className="flex items-center gap-2">
+                <MarqueeDemo />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -279,6 +280,7 @@ const features = [
       </FadeIn>
     ),
   },
+
   {
     Icon: "",
     name: "",
