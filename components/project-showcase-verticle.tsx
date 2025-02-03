@@ -1,3 +1,5 @@
+'use server'
+
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
 
@@ -33,15 +35,21 @@ const ReviewCard = ({
         "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
       )}
     >
-      <a href={`https://bento.engage-dev.com/projects/${slug}`}>
+      <a href={`/projects/${slug}`}>
         <div className="flex flex-row items-center gap-2">
           <div className="flex flex-col">
             <div className="flex items-start gap-2">
-              <img
-                src={`https://bento.engage-dev.com${image}`}
-                alt={name}
-                className="w-8 h-8 rounded-lg object-cover shadow"
-              />
+              {image && (
+                <img
+                  src={image.startsWith('http') ? image : `/${image}`}
+                  alt={name}
+                  className="w-8 h-8 rounded-lg object-cover shadow"
+                  onError={(e) => {
+                    // Fallback to placeholder if image fails to load
+                    (e.target as HTMLImageElement).src = '/images/placeholder.jpg';
+                  }}
+                />
+              )}
               <figcaption className="text-lg font-medium dark:text-white">
                 {name}
               </figcaption>
