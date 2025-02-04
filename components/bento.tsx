@@ -20,6 +20,8 @@ import { cn } from "@/lib/utils";
 // import { RippleCard } from "./ui/ripper-card";
 import { AnimatedBeamMultipleOutputs } from "./animated-beam-multiple-outputs";
 import { BlogsMarqueeVertical } from "./blogs-marquee-vertical";
+import Technologies from "./technologies";
+import { RippleCard } from "./ui/ripper-card";
 // import ProjectPosts from "./project-posts";
 const BLUR_FADE_DELAY = 0.04;
 
@@ -106,62 +108,42 @@ const features = [
       </div>
     ),
   },
-  // {
-  //   Icon: "",
-  //   name: "Technologies",
-  //   description:
-  //     "Using a combination of cutting-edge, and time-tested technologies.",
-  //   href: "/technologies",
-  //   cta: "View all technologies",
-  //   className: "md:col-span-1 md:row-span-1",
-  //   background: (
-  //     <div className="absolute right-0 top-0 w-[80%] origin-top translate-x-0 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_70%)] md:[mask-image:linear-gradient(to_top,transparent_50%,#000_70%)] group-hover:-translate-y-5 group-hover:scale-105">
-  //       <FadeIn direction="up">
-  //         <Technologies />
-  //       </FadeIn>
-  //     </div>
-  //   ),
-  // },
   {
     Icon: "",
-    name: "Tech Domain",
-    description: "Sector-agnostic, focused on solving problems with code.",
-    href: `/projects`,
-    cta: "View projects",
-    className: "md:col-span-1 md:row-span-1",
+    name: "Writings",
+    description:
+      "Writings on ML, Engineering, and more.",
+    className: "md:row-span-2 md:col-span-1",
+    href: `/blog`,
+    cta: "View all Blogs",
     background: (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2.5 }}
-      >
-        <Marquee
-          className="absolute h-2/3 top-10 [--duration:40s] [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] w-full"
-          pauseOnHover
-        >
-          {defaultDomains.map((f, idx) => (
-            <a
-              href={`${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/tags/${f.slug}`}
-              key={idx}
-              className={cn(
-                "relative w-40 h-full cursor-pointer overflow-hidden rounded-xl border p-4 hover:-translate-y-1",
-                "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-                "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
-                "transform-gpu transition-all duration-300 ease-out hover:blur-none"
-              )}
-            >
-              <div className="flex flex-row items-center gap-2">
-                <div className="flex flex-col">
-                  <figcaption className="text-lg font-bold dark:text-white ">
-                    {f.name}
-                  </figcaption>
-                </div>
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
+        <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
+          <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
+            <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
+              <div className="flex items-center gap-2">
+                <BlogsMarqueeVertical />
               </div>
-              <blockquote className="mt-2 text-xs">{f.body}</blockquote>
-            </a>
-          ))}
-        </Marquee>
-      </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    Icon: "",
+    name: "Technologies",
+    description:
+      "Using a combination of cutting-edge, and time-tested technologies.",
+    href: "/technologies",
+    cta: "View all technologies",
+    className: "md:col-span-2 md:row-span-1",
+    background: (
+      <div className="absolute right-0 top-0 w-[80%] origin-top translate-x-0 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_70%)] md:[mask-image:linear-gradient(to_top,transparent_50%,#000_70%)] group-hover:-translate-y-5 group-hover:scale-105">
+        <FadeIn direction="up">
+          <Technologies />
+        </FadeIn>
+      </div>
     ),
   },
   {
@@ -214,6 +196,65 @@ const features = [
       </section>
     ),
   },
+  {
+    Icon: "",
+    name: "Tech Domain",
+    description: "Sector-agnostic, focused on solving problems with code.",
+    href: `/projects`,
+    cta: "View projects",
+    className: "md:col-span-1 md:row-span-1",
+    background: (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2.5 }}
+      >
+        <Marquee
+          className="absolute h-2/3 top-10 [--duration:40s] [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] w-full"
+          pauseOnHover
+        >
+          {defaultDomains.map((f, idx) => (
+            <a
+              href={`${process.env.NEXT_PUBLIC_PORTFOLIO_URL}/tags/${f.slug}`}
+              key={idx}
+              className={cn(
+                "relative w-40 h-full cursor-pointer overflow-hidden rounded-xl border p-4 hover:-translate-y-1",
+                "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
+                "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+                "transform-gpu transition-all duration-300 ease-out hover:blur-none"
+              )}
+            >
+              <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-col">
+                  <figcaption className="text-lg font-bold dark:text-white ">
+                    {f.name}
+                  </figcaption>
+                </div>
+              </div>
+              <blockquote className="mt-2 text-xs">{f.body}</blockquote>
+            </a>
+          ))}
+        </Marquee>
+      </motion.div>
+    ),
+  },
+  {
+    Icon: "",
+    name: "GitHub Calendar",
+    description: "contributions across repositories",
+    href: "https://github.com/nishantb06",
+    cta: "Go to Github",
+    className: "col-span-2 md:col-span-2",
+    background: (
+      <FadeIn direction="up">
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+          <div className="w-full h-full">
+            <GithubCal />
+          </div>
+        </div>
+      </FadeIn>
+    ),
+  },
   // {
   //   Icon: "",
   //   name: "Blogs",
@@ -223,61 +264,23 @@ const features = [
   //   className: "col-span-1 md:col-span-1",
   //   background: <MarqueeDemo />,
   // },
-  // {
-  //   Icon: "",
-  //   name: "",
-  //   description: "",
-  //   href: "",
-  //   cta: "",
-  //   className: "col-span-3 md:col-span-1",
-  //   background: (
-  //     <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[105%]">
-  //       <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
-  //         <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
-  //           <RippleCard />
-  //         </div>
-  //       </div>
-  //     </div>
-  //   ),
-  // },
   {
     Icon: "",
-    name: "Writings",
-    description:
-      "Writings on ML, Engineering, and more.",
-    className: "md:row-span-2 md:col-span-1",
-    href: `/blog`,
-    cta: "View all Blogs",
+    name: "",
+    description: "",
+    href: "",
+    cta: "",
+    className: "col-span-3 md:col-span-1",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[105%]">
         <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
           <div className="absolute h-full w-full [mask-image:linear-gradient(to_bottom,transparent_2%,#000_10%)]">
-            <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 transition-all duration-300">
-              <div className="flex items-center gap-2">
-                <BlogsMarqueeVertical />
-              </div>
-            </div>
+            <RippleCard />
           </div>
         </div>
       </div>
     ),
   },
-  {
-    Icon: "",
-    name: "GitHub Calendar",
-    description: "contributions across repositories",
-    href: "https://github.com/nishantb06",
-    cta: "Go to Github",
-    className: "col-span-3 md:col-span-2",
-    background: (
-      <FadeIn direction="up">
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-          <GithubCal />
-        </div>
-      </FadeIn>
-    ),
-  },
-
   {
     Icon: "",
     name: "",

@@ -20,6 +20,7 @@ export function GithubCal() {
           showWeekdayLabels={false}
           fontSize={16}
           theme={customTheme}
+          blockSize={10}
         />
       </div>
     </div>
