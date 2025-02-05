@@ -68,7 +68,6 @@ const projectsData = [
 ];
 
 function Projects() {
-  console.log(S3_BASE_URL);
   return (
     <div className="flex flex-col gap-4 w-full">
         <div className="container mx-auto px-4 py-4">
