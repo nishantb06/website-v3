@@ -13,7 +13,7 @@ const projectsData = [
       "Demo frontend that lets you monitor your training runs, just like Weights and Biases!",
     link: "https://form-vibe.vercel.app/",
     code: "https://github.com/yatharth1706/FormVibe",
-    previewVideo: `${S3_BASE_URL}/wandb-duplicate.mov`,
+    previewVideo: `${S3_BASE_URL}wandb-duplicate.mov`,
     technologies: [
       "Next.js",
       "React",
@@ -28,7 +28,7 @@ const projectsData = [
       " Chrome extension that helps you manage your active reading list with ease. ",
     link: "https://github.com/yatharth1706/EmojiGit",
     code: "https://github.com/yatharth1706/EmojiGit",
-    previewVideo: `${S3_BASE_URL}/reading-stack-video.mov`,
+    previewVideo: `${S3_BASE_URL}reading-stack-video.mov`,
     technologies: ["JavaScript", "Node.js", "Git", "Emoji", "Meow", "Inquirer"],
   },
   {
@@ -37,7 +37,7 @@ const projectsData = [
       "Reverse Engineering of SmolLM-V2 and building a sample frontend for it.",
     link: "https://github.com/yatharth1706/SmolLM",
     code: "https://github.com/yatharth1706/SmolLM",
-    previewVideo: `${S3_BASE_URL}/demo-dockercompose-application.mov`,
+    previewVideo: `${S3_BASE_URL}demo-dockercompose-application.mov`,
     technologies: [
       "Next.js",
       "React",
@@ -68,6 +68,7 @@ const projectsData = [
 ];
 
 function Projects() {
+  console.log(S3_BASE_URL);
   return (
     <div className="flex flex-col gap-4 w-full">
         <div className="container mx-auto px-4 py-4">
