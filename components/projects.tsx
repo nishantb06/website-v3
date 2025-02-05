@@ -3,6 +3,9 @@ import React from "react";
 import { Button } from "./ui/button";
 import BlurIn from "./magicui/blurin";
 
+
+const S3_BASE_URL = process.env.NEXT_PUBLIC_S3_BASE_URL;
+
 const projectsData = [
   {
     title: "WandB duplicate",
@@ -10,7 +13,7 @@ const projectsData = [
       "Demo frontend that lets you monitor your training runs, just like Weights and Biases!",
     link: "https://form-vibe.vercel.app/",
     code: "https://github.com/yatharth1706/FormVibe",
-    previewVideo: "/videos/wandb-duplicate.mov",
+    previewVideo: `${S3_BASE_URL}/wandb-duplicate.mov`,
     technologies: [
       "Next.js",
       "React",
@@ -25,7 +28,7 @@ const projectsData = [
       " Chrome extension that helps you manage your active reading list with ease. ",
     link: "https://github.com/yatharth1706/EmojiGit",
     code: "https://github.com/yatharth1706/EmojiGit",
-    previewVideo: "/videos/reading-stack-video.mov",
+    previewVideo: `${S3_BASE_URL}/reading-stack-video.mov`,
     technologies: ["JavaScript", "Node.js", "Git", "Emoji", "Meow", "Inquirer"],
   },
   {
@@ -34,7 +37,7 @@ const projectsData = [
       "Reverse Engineering of SmolLM-V2 and building a sample frontend for it.",
     link: "https://github.com/yatharth1706/SmolLM",
     code: "https://github.com/yatharth1706/SmolLM",
-    previewVideo: "/videos/demo-dockercompose-application.mov",
+    previewVideo: `${S3_BASE_URL}/demo-dockercompose-application.mov`,
     technologies: [
       "Next.js",
       "React",
@@ -92,6 +95,7 @@ function Projects() {
                     autoPlay
                     muted
                     loop
+                    preload="auto"
                     className="rounded-t-md"
                   />
                 ) : (
