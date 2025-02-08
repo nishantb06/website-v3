@@ -168,7 +168,7 @@ const features = [
     Icon: "",
     name: "Work Experience",
     description: "",
-    href: "",
+    href: "blog/tag/work",
     cta: "Read more",
     className: "md:row-span-1 md:col-span-2",
     background: (
