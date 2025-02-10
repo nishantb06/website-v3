@@ -13,7 +13,11 @@ export default async function Blog() {
   // const [toggleValue, setToggleValue] = useState("blogs");
   // const [searchValue, setSearchValue] = useState("");
 
-  const blogs: CleanBlogs = await fetchBlogs();
+  let blogs: CleanBlogs = await fetchBlogs();
+  // sort blogs by the date of the blog
+  blogs = blogs.sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
   // const slugToId = await getSlugToIdMap();
 
   return (
