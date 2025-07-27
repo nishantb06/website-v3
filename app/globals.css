@@ -70,3 +70,32 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Research Paper Styles */
+.research-paper {
+  font-family: 'Times New Roman', Times, serif;
+  line-height: 1.6;
+}
+
+.research-columns {
+  column-count: 2;
+  column-gap: 2rem;
+  column-fill: auto;
+}
+
+.research-columns p {
+  text-align: justify;
+  hyphens: auto;
+  word-spacing: 0.1em;
+}
+
+.research-columns table {
+  break-inside: avoid;
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .research-columns {
+    column-count: 1;
+  }
+}
