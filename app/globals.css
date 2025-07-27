@@ -115,3 +115,9 @@ body {
     column-count: 1;
   }
 }
+
+/* Research paper quote box */
+.research-columns .quote-box {
+  break-inside: avoid;
+  margin: 1.5rem 0;
+}
