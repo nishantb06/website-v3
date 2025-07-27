@@ -20,7 +20,7 @@ export default function ResearchPage() {
       {/* Paper Content */}
       <div className="paper-content">
         {/* Two-column layout */}
-        <div className="research-columns text-sm leading-relaxed text-black">
+        <div className="research-columns text-sm leading-relaxed text-black" style={{columnCount: 2, columnGap: '2rem'}}>
           <p className="mb-4">
             <span className="float-left text-5xl font-bold mr-1 mt-1 leading-none">S</span>
             cience is often hard to read. Most people assume that its 
