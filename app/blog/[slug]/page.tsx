@@ -1,11 +1,11 @@
 import BlurIn from "@/components/magicui/blurin";
+import { NotionPageRenderer } from "@/components/notion-page-renderer";
 import { fetchBlogBySlug, fetchBlogs, getNotionPage } from "@/lib/notion";
 import { NotionBlog } from "@/lib/notion.dtypes";
 import { notFound } from "next/navigation";
-import { NotionRenderer } from "react-notion";
-import "react-notion/src/styles.css";
+import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
-import 'prismjs/components/prism-python';
+import "katex/dist/katex.min.css";
 
 export async function generateStaticParams() {
   const blogs = await fetchBlogs();
@@ -24,8 +24,7 @@ export default async function BlogPage({
     notFound();
   }
   const pageId = blog.id.replace(/-/g, '');
-  const pageData = await getNotionPage(pageId);
-  const blockMap = pageData.props.blockMap;
+  const recordMap = await getNotionPage(pageId);
   return (
     <div className="mx-auto">
       {blog.cover?.type === 'external' && (
@@ -48,7 +47,7 @@ export default async function BlogPage({
       <div className="max-w-3xl mx-auto justify-left">
         <div style={{ maxWidth: 768 }}>
           <BlurIn duration={0.5} className="h-full">
-            <NotionRenderer blockMap={blockMap} />
+            <NotionPageRenderer recordMap={recordMap} />
           </BlurIn>
         </div>
       </div>

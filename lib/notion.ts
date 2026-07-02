@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import { NotionAPI } from "notion-client";
 import { env } from "./env";
 import { cache } from "react";
 import {
@@ -57,14 +58,8 @@ export const fetchBlogBySlug = cache(async (slug: string) => {
   return validatedBlog;
 });
 
-export async function getNotionPage(notionPageId: string) {
-  const data = await fetch(
-    `https://notion-api.splitbee.io/v1/page/${notionPageId}`
-  ).then((res) => res.json());
+const notionApi = new NotionAPI();
 
-  return {
-    props: {
-      blockMap: data,
-    },
-  };
-}
+export const getNotionPage = cache(async (notionPageId: string) => {
+  return notionApi.getPage(notionPageId);
+});

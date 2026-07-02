@@ -23,29 +23,35 @@ export const BlogCard = ({
   date 
 }: BlogCardProps) => {
   return (
-    <Link href={`/blog/${slug}`} className="block">
-      <div className="flex flex-col mb-4">
+    <div className="flex flex-col mb-4">
       <Card 
         className={cn(
-          "flex w-full max-w-2xl h-40 border-none shadow-md mb-4 hover:-translate-y-0.5 group cursor-pointer",
+          "relative flex w-full max-w-2xl h-40 border-none shadow-md mb-4 hover:-translate-y-0.5 group cursor-pointer",
           // light styles
           "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
           // dark styles
           "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
         )}
       >
+        {/* Overlay link makes the whole card clickable without nesting anchors */}
+        <Link
+          href={`/blog/${slug}`}
+          aria-label={title}
+          className="absolute inset-0 z-0"
+        />
+
         {/* Content Section (75% width) */}
-        <div className="flex-grow p-4 pr-0 flex flex-col justify-between">
+        <div className="flex-grow p-4 pr-0 flex flex-col justify-between relative z-10 pointer-events-none">
           <div>
             <h2 className="text-2xl mb-2 line-clamp-2">{title}</h2>
             <p className="text-lg text-muted-foreground line-clamp-2 mb-2">{subtitle}</p>
           </div>
           
           <div className="flex items-center justify-between">
-            <div className="flex gap-2">
+            <div className="flex gap-2 pointer-events-auto">
               {tags.map((tag) => (
-                <Link href={`/blog/tag/${tag}`} key={tag}>
-                  <Badge key={tag}>{tag}</Badge>
+                <Link href={`/blog/tag/${tag}`} key={tag} className="relative z-10">
+                  <Badge>{tag}</Badge>
                 </Link>
               ))}
             </div>
@@ -64,7 +70,7 @@ export const BlogCard = ({
 
         {/* Image Section (25% width) */}
         {coverImage && (
-          <div className="w-1/4 flex-shrink-0 relative">
+          <div className="w-1/4 flex-shrink-0 relative z-10 pointer-events-none">
             <div className="absolute inset-0 m-4">
               <img 
                 src={coverImage} 
@@ -78,7 +84,6 @@ export const BlogCard = ({
           </div>
         )}
       </Card>
-      </div>
-    </Link>
+    </div>
   );
 };
