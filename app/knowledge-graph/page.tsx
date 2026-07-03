@@ -2,8 +2,10 @@ import BlurIn from "@/components/magicui/blurin";
 import { GraphView } from "@/components/knowledge-graph/graph-view";
 import { getKnowledgeGraph } from "@/lib/knowledge";
 
-export default function KnowledgeGraphPage() {
-  const graph = getKnowledgeGraph();
+export const revalidate = 3600;
+
+export default async function KnowledgeGraphPage() {
+  const graph = await getKnowledgeGraph();
 
   return (
     <div className="flex h-screen flex-col py-4">

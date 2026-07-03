@@ -17,10 +17,12 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { Badge } from "@/components/ui/badge";
-import type { KnowledgeNode } from "@/lib/knowledge";
+import type { KnowledgeNote } from "@/lib/knowledge";
+import { wikiLinkToSlug } from "@/lib/slugify";
 
 interface NotePanelProps {
-  note: KnowledgeNode | null;
+  note: KnowledgeNote | null;
+  isLoading?: boolean;
   onClose: () => void;
   onNavigate: (id: string) => void;
 }
@@ -65,7 +67,7 @@ function splitWikiLinks(content: string): ContentPart[] {
     }
     parts.push({
       type: "wiki",
-      slug: match[1].trim().toLowerCase(),
+      slug: wikiLinkToSlug(match[1]),
       label: (match[2] ?? match[1]).trim(),
     });
     lastIndex = index + match[0].length;
@@ -120,27 +122,31 @@ function NoteContent({
               rehypePlugins={[rehypeKatex]}
               components={{
                 a: ({ href, children }) => {
-                  const normalizedHref = href
-                    ?.replace(/^wiki:/, "")
-                    .replace(/^#knowledge-note-/, "")
-                    .replace(/^\/knowledge-graph#knowledge-note-/, "")
-                    .trim()
-                    .toLowerCase();
+                  const raw = (href ?? "").trim();
+                  const isExternal = raw.includes("://") || raw.startsWith("mailto:");
 
-                  if (normalizedHref && !normalizedHref.includes("://")) {
-                    return (
-                      <button
-                        type="button"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          onNavigate(normalizedHref);
-                        }}
-                        className={wikiLinkClassName}
-                      >
-                        {children}
-                      </button>
-                    );
+                  if (raw && !isExternal) {
+                    const stripped = raw
+                      .replace(/^wiki:/, "")
+                      .replace(/^\/knowledge-graph#knowledge-note-/, "")
+                      .replace(/^#knowledge-note-/, "");
+                    const targetSlug = wikiLinkToSlug(stripped);
+
+                    if (targetSlug) {
+                      return (
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            onNavigate(targetSlug);
+                          }}
+                          className={wikiLinkClassName}
+                        >
+                          {children}
+                        </button>
+                      );
+                    }
                   }
 
                   return (
@@ -165,7 +171,12 @@ function NoteContent({
   );
 }
 
-export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
+export function NotePanel({
+  note,
+  isLoading = false,
+  onClose,
+  onNavigate,
+}: NotePanelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(DEFAULT_PANEL_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
@@ -222,7 +233,7 @@ export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
 
   return (
     <AnimatePresence>
-      {note && (
+      {(note || isLoading) && (
         <motion.aside
           key="note-panel"
           className="pointer-events-auto fixed right-0 top-0 z-50 flex h-full max-w-[100vw] flex-col border-l bg-background shadow-2xl"
@@ -251,7 +262,9 @@ export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
           </div>
 
           <div className="flex items-center justify-between border-b p-4">
-            <h2 className="text-lg font-semibold">{note.title}</h2>
+            <h2 className="text-lg font-semibold">
+              {isLoading ? "Loading note..." : note?.title}
+            </h2>
             <button
               type="button"
               onClick={onClose}
@@ -262,7 +275,7 @@ export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
             </button>
           </div>
 
-          {note.tags.length > 0 && (
+          {!isLoading && note && note.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 px-4 pt-3">
               {note.tags.map((tag) => (
                 <Badge key={tag} variant="secondary">
@@ -273,9 +286,21 @@ export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
           )}
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
-            <article className="prose prose-sm dark:prose-invert max-w-none">
-              <NoteContent content={note.content} onNavigate={onNavigate} />
-            </article>
+            {isLoading ? (
+              <div className="space-y-3 animate-pulse">
+                <div className="h-4 w-2/3 rounded bg-muted" />
+                <div className="h-4 w-full rounded bg-muted" />
+                <div className="h-4 w-5/6 rounded bg-muted" />
+                <div className="h-4 w-full rounded bg-muted" />
+                <div className="h-4 w-3/4 rounded bg-muted" />
+              </div>
+            ) : note ? (
+              <article className="prose prose-sm dark:prose-invert max-w-none">
+                <NoteContent content={note.content} onNavigate={onNavigate} />
+              </article>
+            ) : (
+              <p className="text-sm text-muted-foreground">Note not found.</p>
+            )}
           </div>
         </motion.aside>
       )}

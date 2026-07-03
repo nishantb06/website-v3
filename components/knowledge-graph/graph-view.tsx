@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { MouseEvent } from "react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
-import type { KnowledgeGraph, KnowledgeNode } from "@/lib/knowledge";
+import type { KnowledgeGraph, KnowledgeNote } from "@/lib/knowledge";
 import { NotePanel } from "./note-panel";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
@@ -19,10 +19,11 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 interface GraphNode {
   id: string;
   title: string;
-  x?: number;
-  y?: number;
-  fx?: number;
-  fy?: number;
+  degree: number;
+  x: number;
+  y: number;
+  fx: number;
+  fy: number;
 }
 
 interface GraphLink {
@@ -31,12 +32,8 @@ interface GraphLink {
 }
 
 interface ForceGraphRef {
-  d3Force: (
-    name: string,
-    force?: unknown
-  ) => unknown;
-  d3ReheatSimulation: () => void;
   screen2GraphCoords: (x: number, y: number) => { x: number; y: number };
+  zoomToFit: (ms?: number, px?: number) => void;
 }
 
 function linkNodeId(nodeOrId: string | GraphNode) {
@@ -47,10 +44,14 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedNote, setSelectedNote] = useState<KnowledgeNote | null>(null);
+  const [isNoteLoading, setIsNoteLoading] = useState(false);
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [zoomK, setZoomK] = useState(1);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<ForceGraphRef | undefined>(undefined);
+  const noteCacheRef = useRef<Map<string, KnowledgeNote>>(new Map());
 
   useEffect(() => setMounted(true), []);
 
@@ -69,33 +70,27 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
 
   const dark = mounted && resolvedTheme === "dark";
 
-  // Spread nodes in a ring initially so they don't stack and steal hover events
   const graphData = useMemo(
     () => ({
-      nodes: graph.nodes.map((n, i) => {
-        const angle = (i / graph.nodes.length) * 2 * Math.PI;
-        const radius = Math.min(size.width, size.height) * 0.25 || 120;
-        return {
-          id: n.id,
-          title: n.title,
-          x: Math.cos(angle) * radius,
-          y: Math.sin(angle) * radius,
-        };
-      }),
+      nodes: graph.nodes.map((n) => ({
+        id: n.id,
+        title: n.title,
+        degree: n.degree,
+        x: n.x,
+        y: n.y,
+        fx: n.x,
+        fy: n.y,
+      })),
       links: graph.links.map((l) => ({ ...l })),
     }),
-    [graph, size.width, size.height]
+    [graph]
   );
 
   useEffect(() => {
-    const fg = graphRef.current;
-    if (!fg) return;
-    const charge = fg.d3Force("charge") as { strength?: (n: number) => void } | undefined;
-    charge?.strength?.(-220);
-    const link = fg.d3Force("link") as { distance?: (n: number) => void } | undefined;
-    link?.distance?.(90);
-    fg.d3ReheatSimulation();
-  }, [graphData, mounted]);
+    if (!mounted || size.width === 0 || graphData.nodes.length === 0) return;
+    const timeout = setTimeout(() => graphRef.current?.zoomToFit(600, 50), 200);
+    return () => clearTimeout(timeout);
+  }, [mounted, size.width, graphData.nodes.length]);
 
   const neighbors = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -123,8 +118,45 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
     [degree]
   );
 
-  const selectedNote: KnowledgeNode | null =
-    graph.nodes.find((n) => n.id === selectedId) ?? null;
+  useEffect(() => {
+    if (!selectedId) {
+      setSelectedNote(null);
+      setIsNoteLoading(false);
+      return;
+    }
+
+    const cached = noteCacheRef.current.get(selectedId);
+    if (cached) {
+      setSelectedNote(cached);
+      setIsNoteLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    setIsNoteLoading(true);
+    setSelectedNote(null);
+
+    fetch(`/api/knowledge/${selectedId}`, { signal: controller.signal })
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Failed note fetch: ${res.status}`);
+        }
+        return (await res.json()) as KnowledgeNote;
+      })
+      .then((note) => {
+        noteCacheRef.current.set(selectedId, note);
+        setSelectedNote(note);
+      })
+      .catch((error) => {
+        if (controller.signal.aborted) return;
+        console.error("Knowledge note load error:", error);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsNoteLoading(false);
+      });
+
+    return () => controller.abort();
+  }, [selectedId]);
 
   const isDimmed = useCallback(
     (id: string) =>
@@ -163,8 +195,6 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
 
   const drawNode = useCallback(
     (node: GraphNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
-      if (node.x == null || node.y == null) return;
-
       const dimmed = isDimmed(node.id);
       const hovered = node.id === hoverId;
       const selected = node.id === selectedId;
@@ -192,20 +222,23 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
       ctx.fillStyle = nodeColor;
       ctx.fill();
 
-      const fontSize = Math.max(11 / globalScale, 3);
-      ctx.font = `${fontSize}px sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      ctx.fillStyle = dark
-        ? dimmed
-          ? "rgba(226, 232, 240, 0.2)"
-          : "#e2e8f0"
-        : dimmed
-          ? "rgba(30, 41, 59, 0.2)"
-          : "#1e293b";
-      ctx.fillText(node.title, node.x, node.y + radius + 2);
+      const shouldShowLabel = hovered || selected || zoomK > 1.15;
+      if (shouldShowLabel) {
+        const fontSize = Math.max(11 / globalScale, 3);
+        ctx.font = `${fontSize}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillStyle = dark
+          ? dimmed
+            ? "rgba(226, 232, 240, 0.2)"
+            : "#e2e8f0"
+          : dimmed
+            ? "rgba(30, 41, 59, 0.2)"
+            : "#1e293b";
+        ctx.fillText(node.title, node.x, node.y + radius + 2);
+      }
     },
-    [dark, hoverId, selectedId, isDimmed, baseRadius]
+    [dark, hoverId, selectedId, isDimmed, baseRadius, zoomK]
   );
 
   const paintPointerArea = useCallback(
@@ -215,7 +248,6 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
       ctx: CanvasRenderingContext2D,
       globalScale: number
     ) => {
-      if (node.x == null || node.y == null) return;
       const fontSize = Math.max(11 / globalScale, 3);
       ctx.font = `${fontSize}px sans-serif`;
       const labelWidth = ctx.measureText(node.title).width;
@@ -301,31 +333,21 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
           linkColor={linkColor as never}
           linkWidth={linkWidth as never}
           backgroundColor="rgba(0,0,0,0)"
-          onNodeHover={((node: GraphNode | null) => {
-            if (!node) return;
-            setHoverId((currentHoverId) =>
-              currentHoverId === node.id ? currentHoverId : node.id
-            );
-          }) as never}
-          onEngineStop={() => {
-            // Freeze node positions so the layout stops drifting/rotating
-            for (const node of graphData.nodes as GraphNode[]) {
-              node.fx = node.x;
-              node.fy = node.y;
-            }
-          }}
+          onZoom={(transform: { k: number }) => setZoomK(transform.k)}
+          enableNodeDrag={false}
           autoPauseRedraw={false}
-          cooldownTicks={120}
+          cooldownTicks={0}
           d3VelocityDecay={0.3}
         />
       )}
 
       <NotePanel
         note={selectedNote}
+        isLoading={isNoteLoading}
         onClose={() => setSelectedId(null)}
         onNavigate={(id) => {
           const normalized = id.trim().toLowerCase();
-          if (graph.nodes.some((n) => n.id === normalized)) {
+          if (graphData.nodes.some((n) => n.id === normalized)) {
             setSelectedId(normalized);
           }
         }}

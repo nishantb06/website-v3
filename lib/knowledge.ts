@@ -1,12 +1,12 @@
-import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
 
 export interface KnowledgeNode {
   id: string;
   title: string;
   tags: string[];
-  content: string;
+  degree: number;
+  x: number;
+  y: number;
 }
 
 export interface KnowledgeLink {
@@ -19,42 +19,80 @@ export interface KnowledgeGraph {
   links: KnowledgeLink[];
 }
 
-const KNOWLEDGE_DIR = path.join(process.cwd(), "content", "knowledge");
-const WIKI_LINK_REGEX = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
+export interface KnowledgeNote {
+  id: string;
+  title: string;
+  tags: string[];
+  content: string;
+}
 
-export function getKnowledgeGraph(): KnowledgeGraph {
-  const files = fs
-    .readdirSync(KNOWLEDGE_DIR)
-    .filter((file) => file.endsWith(".md"));
+const DEFAULT_S3_KNOWLEDGE_BASE =
+  "https://nishantbhansali-website-v3.s3.ap-south-1.amazonaws.com/public/knowledge";
+const S3_KNOWLEDGE_BASE = (
+  process.env.NEXT_PUBLIC_KNOWLEDGE_S3_BASE ?? DEFAULT_S3_KNOWLEDGE_BASE
+).replace(/\/+$/, "");
 
-  const nodes: KnowledgeNode[] = files.map((file) => {
-    const slug = file.replace(/\.md$/, "");
-    const raw = fs.readFileSync(path.join(KNOWLEDGE_DIR, file), "utf-8");
+export async function getKnowledgeGraph(): Promise<KnowledgeGraph> {
+  try {
+    const response = await fetch(`${S3_KNOWLEDGE_BASE}/graph-index.json`, {
+      next: { revalidate: 3600 },
+    });
+    if (!response.ok) {
+      throw new Error(`S3 index fetch failed: ${response.status}`);
+    }
+
+    const data = (await response.json()) as Partial<KnowledgeGraph> & {
+      nodes?: Array<Partial<KnowledgeNode>>;
+      links?: Array<Partial<KnowledgeLink>>;
+    };
+
+    const nodes: KnowledgeNode[] = (data.nodes ?? [])
+      .filter((node) => typeof node.id === "string")
+      .map((node) => ({
+        id: node.id!,
+        title: typeof node.title === "string" ? node.title : node.id!,
+        tags: Array.isArray(node.tags) ? node.tags.filter((v) => typeof v === "string") : [],
+        degree: typeof node.degree === "number" ? node.degree : 0,
+        x: typeof node.x === "number" ? node.x : 0,
+        y: typeof node.y === "number" ? node.y : 0,
+      }));
+
+    const links: KnowledgeLink[] = (data.links ?? [])
+      .filter(
+        (link): link is { source: string; target: string } =>
+          typeof link.source === "string" && typeof link.target === "string",
+      )
+      .map((link) => ({ source: link.source, target: link.target }));
+
+    return { nodes, links };
+  } catch (error) {
+    console.warn("Failed to load knowledge graph index from S3:", error);
+    return { nodes: [], links: [] };
+  }
+}
+
+export async function getNoteContent(slug: string): Promise<KnowledgeNote | null> {
+  try {
+    const response = await fetch(`${S3_KNOWLEDGE_BASE}/${slug}.md`, {
+      next: { revalidate: 3600 },
+    });
+    if (!response.ok) {
+      if (response.status === 404) return null;
+      throw new Error(`S3 note fetch failed: ${response.status}`);
+    }
+
+    const raw = await response.text();
     const { data, content } = matter(raw);
-
     return {
       id: slug,
-      title: data.title ?? slug,
-      tags: data.tags ?? [],
+      title: typeof data.title === "string" ? data.title : slug,
+      tags: Array.isArray(data.tags)
+        ? data.tags.filter((tag): tag is string => typeof tag === "string")
+        : [],
       content: content.trim(),
     };
-  });
-
-  const nodeIds = new Set(nodes.map((node) => node.id));
-  const seen = new Set<string>();
-  const links: KnowledgeLink[] = [];
-
-  for (const node of nodes) {
-    for (const match of node.content.matchAll(WIKI_LINK_REGEX)) {
-      const target = match[1].trim();
-      // skip links to notes that don't exist and duplicate edges (either direction)
-      if (!nodeIds.has(target) || target === node.id) continue;
-      const key = [node.id, target].sort().join("::");
-      if (seen.has(key)) continue;
-      seen.add(key);
-      links.push({ source: node.id, target });
-    }
+  } catch (error) {
+    console.warn(`Failed to load note '${slug}' from S3:`, error);
+    return null;
   }
-
-  return { nodes, links };
 }
