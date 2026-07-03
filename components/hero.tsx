@@ -1,6 +1,5 @@
 "use client";
 
-import MeteorShower from "./magicui/meteors";
 import {WordPullUp} from "./magicui/word-pull-up";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/magicui/fade-in";
@@ -54,7 +53,6 @@ export default function Hero() {
           </FadeIn>
         </div>
       </div>
-      <MeteorShower />
     </div>
   );
 }

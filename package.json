@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "index:knowledge": "node scripts/index-knowledge.mjs",
+    "push:vault": "node scripts/push-vault.mjs"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
@@ -21,7 +23,9 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
+    "d3-force": "^3.0.0",
     "framer-motion": "^12.0.6",
+    "gray-matter": "^4.0.3",
     "katex": "^0.17.0",
     "lucide-react": "^0.474.0",
     "next": "^15.1.6",
@@ -30,15 +34,21 @@
     "prismjs": "^1.30.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-force-graph-2d": "^1.29.1",
     "react-github-calendar": "^4.5.5",
     "react-icon-cloud": "^4.1.7",
+    "react-markdown": "^10.1.0",
     "react-notion-x": "^7.10.0",
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/d3-force": "^3.0.10",
     "@types/node": "^20",
     "@types/prismjs": "^1.26.6",
     "@types/react": "^19",
