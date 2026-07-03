@@ -36,7 +36,9 @@
     "react-icon-cloud": "^4.1.7",
     "react-markdown": "^10.1.0",
     "react-notion-x": "^7.10.0",
+    "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"

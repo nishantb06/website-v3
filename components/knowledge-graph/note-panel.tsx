@@ -13,6 +13,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { XIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { Badge } from "@/components/ui/badge";
 import type { KnowledgeNode } from "@/lib/knowledge";
 
@@ -40,6 +43,16 @@ function clampPanelWidth(width: number) {
 type ContentPart =
   | { type: "markdown"; value: string }
   | { type: "wiki"; slug: string; label: string };
+
+// remark-math only treats multi-line `$$` fences as display math; a single-line
+// `$$...$$` is parsed as inline. Rewrite every `$$...$$` block into the fenced
+// form so it renders as centered display math.
+function normalizeDisplayMath(content: string): string {
+  return content.replace(
+    /\$\$([\s\S]+?)\$\$/g,
+    (_match, expr: string) => `\n\n$$\n${expr.trim()}\n$$\n\n`,
+  );
+}
 
 function splitWikiLinks(content: string): ContentPart[] {
   const parts: ContentPart[] = [];
@@ -75,7 +88,10 @@ function NoteContent({
   content: string;
   onNavigate: (id: string) => void;
 }) {
-  const parts = useMemo(() => splitWikiLinks(content), [content]);
+  const parts = useMemo(
+    () => splitWikiLinks(normalizeDisplayMath(content)),
+    [content],
+  );
 
   return (
     <>
@@ -100,7 +116,8 @@ function NoteContent({
         return (
           <Fragment key={`md-${i}`}>
             <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
+              remarkPlugins={[remarkGfm, remarkMath]}
+              rehypePlugins={[rehypeKatex]}
               components={{
                 a: ({ href, children }) => {
                   const normalizedHref = href
