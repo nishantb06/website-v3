@@ -1,6 +1,14 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { XIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -15,6 +23,19 @@ interface NotePanelProps {
 }
 
 const WIKI_LINK_REGEX = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
+
+const MIN_PANEL_WIDTH = 320;
+const DEFAULT_PANEL_WIDTH = 448;
+const PANEL_WIDTH_STORAGE_KEY = "knowledge-note-panel-width";
+
+function getMaxPanelWidth() {
+  if (typeof window === "undefined") return 720;
+  return Math.min(window.innerWidth - 40, 960);
+}
+
+function clampPanelWidth(width: number) {
+  return Math.min(Math.max(width, MIN_PANEL_WIDTH), getMaxPanelWidth());
+}
 
 type ContentPart =
   | { type: "markdown"; value: string }
@@ -129,17 +150,66 @@ function NoteContent({
 
 export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(DEFAULT_PANEL_WIDTH);
+  const [isResizing, setIsResizing] = useState(false);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
   }, [note?.id]);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(PANEL_WIDTH_STORAGE_KEY);
+    if (stored) {
+      const parsed = Number.parseFloat(stored);
+      if (Number.isFinite(parsed)) {
+        setWidth(clampPanelWidth(parsed));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setWidth((current) => clampPanelWidth(current));
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const startResize = useCallback((event: ReactPointerEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsResizing(true);
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      setWidth(clampPanelWidth(window.innerWidth - moveEvent.clientX));
+    };
+
+    const handlePointerUp = () => {
+      setIsResizing(false);
+      setWidth((current) => {
+        window.localStorage.setItem(
+          PANEL_WIDTH_STORAGE_KEY,
+          String(current),
+        );
+        return current;
+      });
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+    };
+
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "col-resize";
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+  }, []);
 
   return (
     <AnimatePresence>
       {note && (
         <motion.aside
           key="note-panel"
-          className="pointer-events-auto fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l bg-background shadow-2xl"
+          className="pointer-events-auto fixed right-0 top-0 z-50 flex h-full max-w-[100vw] flex-col border-l bg-background shadow-2xl"
+          style={{ width }}
           onMouseMove={(event) => event.stopPropagation()}
           onClick={(event) => event.stopPropagation()}
           initial={{ x: "100%" }}
@@ -147,6 +217,22 @@ export function NotePanel({ note, onClose, onNavigate }: NotePanelProps) {
           exit={{ x: "100%" }}
           transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
         >
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize note panel"
+            onPointerDown={startResize}
+            className="group absolute left-0 top-0 z-10 flex h-full w-2 -translate-x-1/2 cursor-col-resize items-center justify-center"
+          >
+            <div
+              className={`h-full w-px transition-colors ${
+                isResizing
+                  ? "bg-violet-500"
+                  : "bg-transparent group-hover:bg-violet-400/60"
+              }`}
+            />
+          </div>
+
           <div className="flex items-center justify-between border-b p-4">
             <h2 className="text-lg font-semibold">{note.title}</h2>
             <button
