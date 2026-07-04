@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import type { KnowledgeGraph, KnowledgeNote } from "@/lib/knowledge";
 import { NotePanel } from "./note-panel";
+import { NoteSearch } from "./note-search";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
   ssr: false,
@@ -34,6 +35,7 @@ interface GraphLink {
 interface ForceGraphRef {
   screen2GraphCoords: (x: number, y: number) => { x: number; y: number };
   zoomToFit: (ms?: number, px?: number) => void;
+  centerAt: (x?: number, y?: number, ms?: number) => void;
 }
 
 function linkNodeId(nodeOrId: string | GraphNode) {
@@ -313,6 +315,17 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
     [nodeIdAtEvent]
   );
 
+  const handleSearchSelect = useCallback(
+    (id: string) => {
+      setSelectedId(id);
+      const targetNode = graphData.nodes.find((node) => node.id === id);
+      if (targetNode) {
+        graphRef.current?.centerAt(targetNode.x, targetNode.y, 400);
+      }
+    },
+    [graphData.nodes]
+  );
+
   return (
     <div
       ref={containerRef}
@@ -340,6 +353,8 @@ export function GraphView({ graph }: { graph: KnowledgeGraph }) {
           d3VelocityDecay={0.3}
         />
       )}
+
+      <NoteSearch nodes={graph.nodes} onSelect={handleSearchSelect} />
 
       <NotePanel
         note={selectedNote}
