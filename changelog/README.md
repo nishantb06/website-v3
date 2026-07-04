@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-07-04 — Graph note search bar
+
+Added a compact search bar in the top-left of `/knowledge-graph` so notes can
+be found and opened quickly without hunting through the graph manually.
+
+### What changed
+
+- `components/knowledge-graph/note-search.tsx` (new)
+  - Added an inline shadcn `Command` search UI overlay for the graph canvas.
+  - Searches by note title and tags.
+  - Keeps the UI compact: results list appears only after typing.
+- `components/knowledge-graph/graph-view.tsx`
+  - Mounted `NoteSearch` over the graph canvas.
+  - Selecting a search result reuses the existing note-open flow
+    (`setSelectedId`) and pans the graph viewport to the selected node with
+    `centerAt(...)`.
+
 ## 2026-07-03 — S3-backed knowledge graph, wiki-link slug fix & deploy workflow
 
 The Obsidian-style knowledge graph moved from bundled in-repo markdown to a
