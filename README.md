@@ -43,3 +43,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Todo's
 [] nesting , image captions, lists and so much more were working with react notion, look into it
 [] 
+
+## For Obsidian KG graph updates
+`node push-vault.mjs "/Users/Nishant/desktop/personal/genai_cce_26/Topics"` Just run this
